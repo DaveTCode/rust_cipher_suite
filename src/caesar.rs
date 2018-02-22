@@ -24,41 +24,41 @@ const LETTER_FREQUENCY: [f32; 26] = [
     0.17,
     0.11,
     0.10,
-    0.07
+    0.07,
 ];
 
-fn score_offset(offset: u8, cipher_text: &String) -> f32 {
-    return cipher_text.chars()
+fn score_offset(offset: u8, cipher_text: &str) -> f32 {
+    cipher_text
+        .chars()
         .filter(|c| c.is_ascii_alphabetic())
         .map(|c| {
             let ascii_value = c.to_ascii_uppercase() as i32 - 'A' as i32;
-            let offset_value = (ascii_value + offset as i32) % 26;
+            let offset_value = (ascii_value + i32::from(offset)) % 26;
 
-            return LETTER_FREQUENCY[offset_value as usize];
+            LETTER_FREQUENCY[offset_value as usize]
         })
-        .fold(0f32, |acc, x| acc + x);
+        .fold(0f32, |acc, x| acc + x)
 }
 
-fn decrypt(offset: u8, cipher_text: &String) -> String{
-    return cipher_text.chars()
-        .map(|c| {
-            if c.is_ascii_alphabetic() {
-                let ascii_value = c.to_ascii_uppercase() as i32 - 'A' as i32;
-                let offset_value = (ascii_value + offset as i32) % 26;
-                return ('A' as i32 + offset_value) as u8 as char;
-            } else {
-                return c;
-            }
+fn decrypt(offset: u8, cipher_text: &str) -> String {
+    cipher_text
+        .chars()
+        .map(|c| if c.is_ascii_alphabetic() {
+            let ascii_value = c.to_ascii_uppercase() as i32 - 'A' as i32;
+            let offset_value = (ascii_value + i32::from(offset)) % 26;
+            ('A' as i32 + offset_value) as u8 as char
+        } else {
+            c
         })
-        .collect();
+        .collect()
 }
 
-pub fn solve(cipher_text: String) -> (u8, String) {
+pub fn solve(cipher_text: &str) -> (u8, String) {
     let mut top_score = 0f32;
     let mut top_offset = 0u8;
 
     for offset in 0u8..26 {
-        let score = score_offset(offset, &cipher_text);
+        let score = score_offset(offset, cipher_text);
 
         if score > top_score {
             top_score = score;
@@ -66,5 +66,5 @@ pub fn solve(cipher_text: String) -> (u8, String) {
         }
     }
 
-    return (top_offset, decrypt(top_offset, &cipher_text));
+    (top_offset, decrypt(top_offset, cipher_text))
 }
