@@ -1,0 +1,6 @@
+[package]
+name = "rust_ciphers"
+version = "0.1.0"
+authors = ["David Tyler <david.tyler@metaswitch.com>"]
+
+[dependencies]
