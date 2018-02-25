@@ -1,30 +1,6 @@
 const LETTER_FREQUENCY: [f32; 26] = [
-    12.02,
-    9.10,
-    8.12,
-    7.68,
-    7.31,
-    6.95,
-    6.28,
-    6.02,
-    5.92,
-    4.32,
-    3.98,
-    2.88,
-    2.71,
-    2.61,
-    2.30,
-    2.11,
-    2.09,
-    2.03,
-    1.82,
-    1.49,
-    1.11,
-    0.69,
-    0.17,
-    0.11,
-    0.10,
-    0.07,
+    12.02, 9.10, 8.12, 7.68, 7.31, 6.95, 6.28, 6.02, 5.92, 4.32, 3.98, 2.88, 2.71, 2.61, 2.30,
+    2.11, 2.09, 2.03, 1.82, 1.49, 1.11, 0.69, 0.17, 0.11, 0.10, 0.07,
 ];
 
 fn score_offset(offset: u8, cipher_text: &str) -> f32 {
@@ -43,12 +19,14 @@ fn score_offset(offset: u8, cipher_text: &str) -> f32 {
 fn decrypt(offset: u8, cipher_text: &str) -> String {
     cipher_text
         .chars()
-        .map(|c| if c.is_ascii_alphabetic() {
-            let ascii_value = c.to_ascii_uppercase() as i32 - 'A' as i32;
-            let offset_value = (ascii_value + i32::from(offset)) % 26;
-            ('A' as i32 + offset_value) as u8 as char
-        } else {
-            c
+        .map(|c| {
+            if c.is_ascii_alphabetic() {
+                let ascii_value = c.to_ascii_uppercase() as i32 - 'A' as i32;
+                let offset_value = (ascii_value + i32::from(offset)) % 26;
+                ('A' as i32 + offset_value) as u8 as char
+            } else {
+                c
+            }
         })
         .collect()
 }
